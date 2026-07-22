@@ -19,7 +19,7 @@ jobs :
     runs-on : ubuntu-latest
 
   # 작업단계 지정
-  steps : 
+    steps : 
     # 1. github에 저장되어 있는 최신 내용을 체크아웃(소스를 모두 내려 받음)
-    - name : 코드 checkout
-      uses : actions/checkout@v3 
+      - name : 코드 checkout
+        uses : actions/checkout@v3 
