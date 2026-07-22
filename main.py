@@ -3,12 +3,13 @@
 
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles # 정적 데이터 처리 모듈 
 
 # 2. FastAPI 객체 생성, 전역변수 생성
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-
+app.mount("/static", StaticFiles(directory="static"), name="static") # 정적 데이터 경로 설정
 
 # 3. 라우팅 구성/정의
 
@@ -18,6 +19,6 @@ def home(req:Request):
     # → index html을 읽어서 req데이터를 전달하여 동적으로 html을 구성 
     # → 응답(return) → 클라이언트 브라우저에게 전달 → 랜더링 → dom tree
     # → 브라우저 해석, 화면에 그리기 → 클라이언트는 응답 결과를 화면에서 볼 수 있다.
-    return templates.TemplateResponse("index.html", {"request":req})
+    return templates.TemplateResponse(req,"index.html")
 
 # 4. 
