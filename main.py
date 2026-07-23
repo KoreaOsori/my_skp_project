@@ -21,4 +21,6 @@ def home(req:Request):
     # → 브라우저 해석, 화면에 그리기 → 클라이언트는 응답 결과를 화면에서 볼 수 있다.
     return templates.TemplateResponse(req,"index.html")
 
-# 4. 
+@app.get("/auth/login")
+def home(req:Request): 
+    return templates.TemplateResponse(req,"login.html")
