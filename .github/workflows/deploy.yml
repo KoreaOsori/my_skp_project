@@ -39,6 +39,8 @@ jobs :
       # CI쪽 서버에서 EC2 서버(배포용 서버)로 배포 → SSH
       # 사전 → AWS에서 EC2를 하나 생성 → ip/domain, ubuntu(사용자명), key는 pem파일
       # 사전작업 후 → Github상의 해당 저장소에 secrets 변수로 위의 3개 값을 세팅(secrets...)
+      # EC2 서버의 SSH 인바운드의 접근 제약 정보에서 특정 IP가 아닌 어느 곳에서든 접근 가능하게 구성
+      # xx.xxx.xxx.xx → 00.000.000.00(보안에는 취약)
       - name : sourcecode copy to EC2
         uses : appleboy/scp-action@master
         with:
