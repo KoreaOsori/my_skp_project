@@ -46,9 +46,28 @@ jobs :
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_KEY }}
           port: 22
           # 복사할 대상(편의상 현재 디렉토리 모두를 지정(.))
           source: .
           # ubuntu os가 세팅된 ec2 서버의 /home/ubuntu/projects/*.*복사
           target: "/home/ubuntu/projects"
+
+        # 시크릿 변수에는 환경변수(.env ← git 업로드x)에 들어가는 내용들을 담을수도 있음
+        # 개별 사항을  세팅 or yml에서 설정 or 동적으로 .env에
+        # 남은사항 → 서비스 재가동 명령 전달
+        # EC2 서버에 배포 후 작동에 관련된 스크립트 작동
+      - name : sourcecode copy to EC2
+        uses : appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          port : 22
+          scripts : 
+              # 1. 프로젝트 폴더 위치로 이동
+              # cd /home/ubuntu/project
+              # 2. 가상환경에 추가된 패키지가 있다면
+              # ./web/bin/pip install -r requirements.txt
+              # 3. 서비스 재가동
+              sudo systemctl restart hello.service
