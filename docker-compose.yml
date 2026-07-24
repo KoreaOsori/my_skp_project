@@ -29,20 +29,21 @@ services:
 
   app : 
     # app이라는 디렉토리 내에 존재하는 Dockerfile을 기반으로 빌드 → 이미지 생성 → 컨테이너 구성해라
-    build : ./app
+    image : nuguri0011/fastapi-app:1.1
     container_name : fastapi_app
     restart : unless-stopped
     # Dockerfile의 CMD or ENTRYPOINT + CMD → 데몬 띄우기와 동일한 의미
     command : uvicorn main:app --host 0.0.0.0 --port 8000
     # 볼륨 : 바인드 마운트
-    volumes:
-      - ./app:/app # 호스트os의 경로(개발PC) : 컨테이너 작업 디렉토리 경로 공유로 지정
+    # 이미 이미지안에 소스코드가 모두 포함되어 있음(제거)
+    # volumes:
+    #   - ./app:/app # 호스트os의 경로(개발PC) : 컨테이너 작업 디렉토리 경로 공유로 지정
     # 환경변수  : app → db엑세스 → sql실행 → 결과 획득 하기 위해 연결정보 필요 
     environment : 
       # SQLAlchemy + 전용 드라이버 브릿지 하여 사용시 표기법
       # 프로토콜명 : //아이디 : 비번@ip(서비스명) : port/데이터베이스명
       # 차후 파이썬 코드에서 dotenv패키지 활용 → 환경변수 엑세스 가능함
-      DATABASE_URL : "mysql+pymysql://guest:1234@db:3307/memo"
+      DATABASE_URL : "mysql+pymysql://guest:1234@db:3306/memo"
     networks : 
       - my-net
     # 의존성 명시 : 특정 컨테이너가 먼저 정상 가동중이여야만 해당 컨테이너가 작동된다.
@@ -54,7 +55,7 @@ services:
     # 클라이언트 요청 → nginx 대응 → 해당 요청을 was쪽으로 프록시(전달), 80포트로만 대응
     # 향후 클라우드에서 80만 오픈(외부망에 이 파트만 연결)
   proxy : 
-    image : nginx:alpine
+    image : nuguri0011/nginx-proxy:1.0
     container_name : nginx_proxy
     restart : unless-stopped
     # 프록시할 포트
@@ -62,8 +63,9 @@ services:
        - "80:80"
     # 볼륨(프록시 구성에 필요한 설정 파일을 외부(호스트os)로 공유)
     # web.conf의 내용이 default.conf 쪽으로 반영됨
-    volumes : 
-      - ./nginx/web.conf:/etc/nginx/conf.d/default.conf
+    # 이미 이미지안에 소스코드가 모두 포함되어 있음(제거)
+    # volumes : 
+    #   - ./nginx/web.conf:/etc/nginx/conf.d/default.conf
     networks:
       - my-net
     depends_on : 

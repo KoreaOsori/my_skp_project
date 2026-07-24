@@ -33,3 +33,10 @@ my_skp_project/
     │   └ *.css
     └  JS
         └ *.js
+
+# docker 기반 ci/cd 조정
+- docker-compose.yml 조정
+    - app, proxy 파트 이미지를 hub 쪽으로 조정, 볼륨을 제거
+- 명령어
+    - docker-compose down
+    - docker-compose up -d(build는 hub에서 불러와서 사용x)
